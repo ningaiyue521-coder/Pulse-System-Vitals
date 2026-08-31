@@ -1,0 +1,20 @@
+# Local runtime and personal preferences
+.build/
+Pulse.settings.json
+Pulse.exe.new
+
+# .NET / Visual Studio output
+**/bin/
+**/obj/
+**/.vs/
+**/dist/
+**/publish*/
+*.user
+*.suo
+*.pdb
+*.log
+
+# Operating-system clutter
+Thumbs.db
+Desktop.ini
+.DS_Store

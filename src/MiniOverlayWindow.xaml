@@ -1,0 +1,203 @@
+<Window x:Class="DemoApp.MiniOverlayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:behaviors="clr-namespace:DemoApp.Behaviors"
+        xmlns:controls="clr-namespace:DemoApp.Controls"
+        Title="Pulse Mini OSD"
+        Width="428" Height="74"
+        WindowStyle="None"
+        AllowsTransparency="False"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        ShowActivated="False"
+        Topmost="True"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
+        behaviors:GlassyWindowBehavior.Enable="True"
+        FontFamily="Segoe UI Variable Text, Microsoft YaHei UI">
+    <Window.Resources>
+        <SolidColorBrush x:Key="OsdInk" Color="#F7FFFFFF"/>
+        <SolidColorBrush x:Key="OsdSecondary" Color="#A8FFFFFF"/>
+        <SolidColorBrush x:Key="OsdDivider" Color="#2AFFFFFF"/>
+        <LinearGradientBrush x:Key="OsdSurfaceFill" StartPoint="0.08,0" EndPoint="0.92,1">
+            <GradientStop Color="#6A1D222C" Offset="0"/>
+            <GradientStop Color="#52131922" Offset="0.52"/>
+            <GradientStop Color="#7410161F" Offset="1"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="OsdOuterEdge" StartPoint="0.1,0" EndPoint="0.9,1">
+            <GradientStop Color="#A8FFFFFF" Offset="0"/>
+            <GradientStop Color="#38E7F7FF" Offset="0.48"/>
+            <GradientStop Color="#1E87C5FF" Offset="1"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="OsdInnerEdge" StartPoint="0.84,0" EndPoint="0.16,1">
+            <GradientStop Color="#2A92D3FF" Offset="0"/>
+            <GradientStop Color="#18FFFFFF" Offset="0.56"/>
+            <GradientStop Color="#0EBEA5FF" Offset="1"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="OsdSpecularBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#00FFFFFF" Offset="0"/>
+            <GradientStop Color="#B8FFFFFF" Offset="0.24"/>
+            <GradientStop Color="#64FFFFFF" Offset="0.58"/>
+            <GradientStop Color="#00FFFFFF" Offset="0.82"/>
+        </LinearGradientBrush>
+        <Style x:Key="OsdLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource OsdSecondary}"/>
+            <Setter Property="FontSize" Value="8.5"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+        <Style x:Key="RestoreInlineButton" TargetType="Button">
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid x:Name="ButtonBody" RenderTransformOrigin="0.5,0.5">
+                            <Grid.RenderTransform><ScaleTransform/></Grid.RenderTransform>
+                            <Border x:Name="HoverSurface"
+                                    CornerRadius="15"
+                                    Background="#00FFFFFF"/>
+                            <Viewbox x:Name="Glyph" Width="15" Height="15" Opacity="0.72">
+                                <Path Data="M 5.25 13.75 L 13.75 5.25 M 8.25 5.25 L 13.75 5.25 L 13.75 10.75"
+                                      Stroke="#F7FFFFFF"
+                                      StrokeThickness="1.5"
+                                      StrokeStartLineCap="Round"
+                                      StrokeEndLineCap="Round"
+                                      StrokeLineJoin="Round"/>
+                            </Viewbox>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="HoverSurface" Property="Background" Value="#20FFFFFF"/>
+                                <Setter TargetName="Glyph" Property="Opacity" Value="1"/>
+                                <Setter TargetName="ButtonBody" Property="RenderTransform">
+                                    <Setter.Value><ScaleTransform ScaleX="1.02" ScaleY="1.02"/></Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="HoverSurface" Property="Background" Value="#34FFFFFF"/>
+                                <Setter TargetName="ButtonBody" Property="RenderTransform">
+                                    <Setter.Value><ScaleTransform ScaleX="0.92" ScaleY="0.92"/></Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Background="Transparent">
+        <Grid x:Name="MainGlass"
+              Width="426" Height="64"
+              HorizontalAlignment="Left"
+              VerticalAlignment="Center"
+              Margin="1,0,0,0">
+            <Border CornerRadius="32"
+                    BorderThickness="1"
+                    BorderBrush="{DynamicResource OsdOuterEdge}"
+                    Background="{DynamicResource OsdSurfaceFill}">
+                <Border.CacheMode><BitmapCache/></Border.CacheMode>
+            </Border>
+            <Border Margin="2"
+                    CornerRadius="30"
+                    BorderThickness="1"
+                    BorderBrush="{DynamicResource OsdInnerEdge}"
+                    IsHitTestVisible="False"/>
+            <Border Height="1"
+                    Margin="27,6,38,0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Top"
+                    Background="{DynamicResource OsdSpecularBrush}"
+                    IsHitTestVisible="False">
+                <Border.CacheMode><BitmapCache/></Border.CacheMode>
+            </Border>
+
+            <Grid Margin="14,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="88"/>
+                    <ColumnDefinition Width="1"/>
+                    <ColumnDefinition Width="84"/>
+                    <ColumnDefinition Width="92"/>
+                    <ColumnDefinition Width="94"/>
+                    <ColumnDefinition Width="1"/>
+                    <ColumnDefinition Width="38"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Margin="0,1,0,0">
+                    <TextBlock Text="CPU" Style="{StaticResource OsdLabel}" HorizontalAlignment="Center"/>
+                    <controls:LiquidValueText x:Name="MiniCpuValue"
+                                              Width="68" Height="29"
+                                              Text="--%" Value="0"
+                                              FontSize="22"
+                                              FontWeight="SemiBold"
+                                              BaseBrush="{StaticResource OsdInk}"
+                                              AccentBrush="#FF45A9FF"
+                                              AutomationProperties.Name="OSD CPU 液态数字"/>
+                </StackPanel>
+
+                <Border Grid.Column="1" Width="1" Height="30" VerticalAlignment="Center" Background="{DynamicResource OsdDivider}"/>
+
+                <StackPanel Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,1,0,0">
+                    <TextBlock Text="GPU" Style="{StaticResource OsdLabel}" HorizontalAlignment="Center"/>
+                    <controls:LiquidValueText x:Name="MiniGpuValue"
+                                              Width="64" Height="28"
+                                              Text="--%" Value="0"
+                                              FontSize="20"
+                                              FontWeight="SemiBold"
+                                              BaseBrush="{StaticResource OsdInk}"
+                                              AccentBrush="#FF7C8DFF"
+                                              AutomationProperties.Name="OSD GPU 液态数字"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,1,0,0">
+                    <TextBlock Text="内存" Style="{StaticResource OsdLabel}" HorizontalAlignment="Center"/>
+                    <controls:LiquidValueText x:Name="MiniMemoryValue"
+                                              Width="68" Height="28"
+                                              Text="--%" Value="0"
+                                              FontSize="20"
+                                              FontWeight="SemiBold"
+                                              BaseBrush="{StaticResource OsdInk}"
+                                              AccentBrush="#FF3BD2DE"
+                                              AutomationProperties.Name="OSD 内存液态数字"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,1,0,0">
+                    <TextBlock Text="温度" Style="{StaticResource OsdLabel}" HorizontalAlignment="Center"/>
+                    <controls:LiquidValueText x:Name="MiniTemperatureValue"
+                                              Width="68" Height="28"
+                                              Text="--°" Value="0"
+                                              FontSize="20"
+                                              FontWeight="SemiBold"
+                                              BaseBrush="{StaticResource OsdInk}"
+                                              AccentBrush="#FF63D2E8"
+                                              AutomationProperties.Name="OSD 温度液态数字"/>
+                </StackPanel>
+
+                <Border Grid.Column="5"
+                        Width="1" Height="26"
+                        VerticalAlignment="Center"
+                        Background="{DynamicResource OsdDivider}"
+                        Opacity="0.72"/>
+
+                <Button x:Name="RestoreButton"
+                        Grid.Column="6"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource RestoreInlineButton}"
+                        ToolTip="返回完整面板（也可双击空白处）"
+                        AutomationProperties.Name="返回完整面板"
+                        Click="Restore_Click"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

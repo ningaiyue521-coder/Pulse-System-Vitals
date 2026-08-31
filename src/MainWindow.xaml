@@ -1,0 +1,346 @@
+<Window x:Class="DemoApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:DemoApp.Controls"
+        Title="Pulse · System Vitals"
+        Width="1180" Height="760"
+        MinWidth="980" MinHeight="660"
+        FontFamily="Segoe UI Variable Text, Microsoft YaHei UI"
+        FontSize="13"
+        Style="{StaticResource GlassyWindowStyle}">
+    <Window.Resources>
+        <SolidColorBrush x:Key="Ink" Color="#F21D1D1F"/>
+        <SolidColorBrush x:Key="Secondary" Color="#963C3C43"/>
+        <SolidColorBrush x:Key="Tertiary" Color="#6B3C3C43"/>
+        <SolidColorBrush x:Key="WindowGlassOverlay" Color="#12F6FAFF"/>
+        <SolidColorBrush x:Key="WindowChromeFill" Color="#0EFFFFFF"/>
+        <SolidColorBrush x:Key="ContentSurfaceFill" Color="#F3F8F9FB"/>
+        <SolidColorBrush x:Key="ContentSurfaceEdge" Color="#58FFFFFF"/>
+        <SolidColorBrush x:Key="ContentLine" Color="#12000000"/>
+        <SolidColorBrush x:Key="FunctionalGlassFill" Color="#92FFFFFF"/>
+        <SolidColorBrush x:Key="SettingsGlassFill" Color="#E4FCFDFF"/>
+        <SolidColorBrush x:Key="HeaderGlassFill" Color="#9AFFFFFF"/>
+        <SolidColorBrush x:Key="GlassButtonFill" Color="#68FFFFFF"/>
+        <SolidColorBrush x:Key="StatusChipFill" Color="#190A84FF"/>
+        <SolidColorBrush x:Key="Blue" Color="#FF0A84FF"/>
+        <SolidColorBrush x:Key="Violet" Color="#FF5E8CFF"/>
+        <SolidColorBrush x:Key="Mint" Color="#FF36A8D8"/>
+        <SolidColorBrush x:Key="Orange" Color="#FFFF9F0A"/>
+
+        <LinearGradientBrush x:Key="HeroAmbientFill" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#2DFFFFFF" Offset="0"/>
+            <GradientStop Color="#1EEDF5FF" Offset="0.58"/>
+            <GradientStop Color="#120A84FF" Offset="1"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="FunctionalGlassEdge" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#CFFFFFFF" Offset="0"/>
+            <GradientStop Color="#72FFFFFF" Offset="0.5"/>
+            <GradientStop Color="#30374655" Offset="1"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="GlassCardEdge" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#CFFFFFFF" Offset="0"/>
+            <GradientStop Color="#72FFFFFF" Offset="0.5"/>
+            <GradientStop Color="#30374655" Offset="1"/>
+        </LinearGradientBrush>
+        <RadialGradientBrush x:Key="FunctionalSheen" Center="0.22,0.1" GradientOrigin="0.22,0.1" RadiusX="0.8" RadiusY="1.1">
+            <GradientStop Color="#8CFFFFFF" Offset="0"/>
+            <GradientStop Color="#20FFFFFF" Offset="0.38"/>
+            <GradientStop Color="#00FFFFFF" Offset="0.78"/>
+        </RadialGradientBrush>
+
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource Ink}"/>
+        </Style>
+        <Style x:Key="Eyebrow" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource Tertiary}"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <Style x:Key="SectionTitle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="17"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <Style x:Key="GlassButton" TargetType="Button">
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Padding" Value="14,0"/>
+            <Setter Property="Foreground" Value="{StaticResource Ink}"/>
+            <Setter Property="Background" Value="{DynamicResource GlassButtonFill}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource FunctionalGlassEdge}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid x:Name="Body" RenderTransformOrigin="0.5,0.5">
+                            <Grid.RenderTransform><ScaleTransform/></Grid.RenderTransform>
+                            <Border x:Name="Glow" CornerRadius="17" Background="#24FFFFFF" Opacity="0"/>
+                            <Border x:Name="Base" CornerRadius="17" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"/>
+                            <Border CornerRadius="17" Background="{DynamicResource FunctionalSheen}" Opacity="0.30" IsHitTestVisible="False"/>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Base" Property="Background" Value="#8AFFFFFF"/><Setter TargetName="Glow" Property="Opacity" Value="1"/></Trigger>
+                            <Trigger Property="IsPressed" Value="True"><Setter TargetName="Body" Property="RenderTransform"><Setter.Value><ScaleTransform ScaleX="0.95" ScaleY="0.95"/></Setter.Value></Setter></Trigger>
+                            <Trigger Property="IsEnabled" Value="False"><Setter TargetName="Body" Property="Opacity" Value="0.45"/></Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="IconGlassButton" TargetType="Button" BasedOn="{StaticResource GlassButton}">
+            <Setter Property="Width" Value="34"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+        <Style x:Key="ProcessItem" TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0,1"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListViewItem">
+                        <Border x:Name="Row" CornerRadius="8" Background="{TemplateBinding Background}" Padding="8,7"><ContentPresenter/></Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Row" Property="Background" Value="#34FFFFFF"/></Trigger>
+                            <Trigger Property="IsSelected" Value="True"><Setter TargetName="Row" Property="Background" Value="#4AFFFFFF"/></Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="EndProcessButton" TargetType="Button">
+            <Setter Property="Width" Value="38"/><Setter Property="Height" Value="23"/><Setter Property="Padding" Value="0"/><Setter Property="FontSize" Value="9"/>
+            <Setter Property="Foreground" Value="#B94A1E1E"/><Setter Property="Background" Value="#26FF6B64"/><Setter Property="BorderBrush" Value="#40FF6B64"/><Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/><Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button"><Border x:Name="EndRoot" CornerRadius="8" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/></Border><ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="EndRoot" Property="Background" Value="#54FF6B64"/></Trigger><Trigger Property="IsPressed" Value="True"><Setter TargetName="EndRoot" Property="Opacity" Value="0.65"/></Trigger><Trigger Property="IsEnabled" Value="False"><Setter TargetName="EndRoot" Property="Opacity" Value="0.25"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
+        </Style>
+        <Style x:Key="GlassSliderRepeat" TargetType="RepeatButton">
+            <Setter Property="Focusable" Value="False"/><Setter Property="IsTabStop" Value="False"/><Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="RepeatButton"><Border Height="4" CornerRadius="2" Background="{TemplateBinding Background}"/></ControlTemplate></Setter.Value></Setter>
+        </Style>
+        <Style x:Key="GlassSliderThumb" TargetType="Thumb">
+            <Setter Property="Width" Value="16"/><Setter Property="Height" Value="16"/>
+            <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Thumb"><Ellipse Fill="#F7FFFFFF" Stroke="#A8FFFFFF" StrokeThickness="1"><Ellipse.Effect><DropShadowEffect BlurRadius="5" ShadowDepth="1" Opacity="0.2" Color="#30445D"/></Ellipse.Effect></Ellipse></ControlTemplate></Setter.Value></Setter>
+        </Style>
+        <Style x:Key="GlassSlider" TargetType="Slider">
+            <Setter Property="Height" Value="22"/><Setter Property="IsMoveToPointEnabled" Value="True"/><Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Grid Margin="3,0">
+                            <Track x:Name="PART_Track" VerticalAlignment="Center">
+                                <Track.DecreaseRepeatButton><RepeatButton Command="{x:Static Slider.DecreaseLarge}" Background="#D90A84FF" Style="{StaticResource GlassSliderRepeat}"/></Track.DecreaseRepeatButton>
+                                <Track.Thumb><Thumb Style="{StaticResource GlassSliderThumb}"/></Track.Thumb>
+                                <Track.IncreaseRepeatButton><RepeatButton Command="{x:Static Slider.IncreaseLarge}" Background="#263C3C43" Style="{StaticResource GlassSliderRepeat}"/></Track.IncreaseRepeatButton>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid x:Name="LayoutRoot">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="56"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="34"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="20,0,142,0">
+            <Border HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Padding="7,4,13,4"
+                    CornerRadius="21"
+                    Background="{DynamicResource FunctionalGlassFill}"
+                    BorderBrush="{DynamicResource FunctionalGlassEdge}"
+                    BorderThickness="1">
+                <Grid>
+                    <Border Background="{DynamicResource FunctionalSheen}" CornerRadius="20" Opacity="0.34" IsHitTestVisible="False"/>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Grid Width="32" Height="32">
+                            <Ellipse Fill="#24FFFFFF" Stroke="#82FFFFFF" StrokeThickness="1"/>
+                            <Ellipse Width="11" Height="11" Fill="{StaticResource Blue}"/>
+                        </Grid>
+                        <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="Pulse" FontSize="17" FontWeight="SemiBold"/>
+                            <TextBlock Text="SYSTEM VITALS" Style="{StaticResource Eyebrow}" FontSize="8"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Border HorizontalAlignment="Right" VerticalAlignment="Center" Padding="8,5" CornerRadius="21" Background="{DynamicResource FunctionalGlassFill}" BorderBrush="{DynamicResource FunctionalGlassEdge}" BorderThickness="1">
+                <Grid>
+                    <Border Background="{DynamicResource FunctionalSheen}" CornerRadius="20" Opacity="0.36" IsHitTestVisible="False"/>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" Margin="4,0,12,0" VerticalAlignment="Center">
+                            <Ellipse x:Name="LiveDot" Width="7" Height="7" Fill="#FF30D158" Margin="0,0,7,0"/>
+                            <TextBlock x:Name="LiveStatus" Text="实时监测" Foreground="{StaticResource Secondary}" FontSize="11"/>
+                        </StackPanel>
+                        <Border Width="1" Height="20" Background="#203C3C43" Margin="0,0,8,0"/>
+                        <Button x:Name="GlassSettingsButton" Style="{StaticResource IconGlassButton}" Margin="0,0,7,0" Click="GlassSettings_Click" ToolTip="光学设置" AutomationProperties.Name="光学设置">
+                            <Viewbox Width="15" Height="15">
+                                <Canvas Width="16" Height="16">
+                                    <Path Data="M 2 4 L 14 4 M 2 8 L 14 8 M 2 12 L 14 12" Stroke="#C81D1D1F" StrokeThickness="1.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round"/>
+                                    <Ellipse Width="3.4" Height="3.4" Canvas.Left="4.3" Canvas.Top="2.3" Fill="#F8FFFFFF" Stroke="#C81D1D1F" StrokeThickness="1"/>
+                                    <Ellipse Width="3.4" Height="3.4" Canvas.Left="9.1" Canvas.Top="6.3" Fill="#F8FFFFFF" Stroke="#C81D1D1F" StrokeThickness="1"/>
+                                    <Ellipse Width="3.4" Height="3.4" Canvas.Left="5.8" Canvas.Top="10.3" Fill="#F8FFFFFF" Stroke="#C81D1D1F" StrokeThickness="1"/>
+                                </Canvas>
+                            </Viewbox>
+                        </Button>
+                        <Button x:Name="PauseButton" Content="暂停" Style="{StaticResource GlassButton}" Click="Pause_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Border Grid.Row="1" Margin="15,3,15,6" CornerRadius="22" Background="{DynamicResource ContentSurfaceFill}" BorderBrush="{DynamicResource ContentSurfaceEdge}" BorderThickness="1" ClipToBounds="True">
+            <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition Width="282"/><ColumnDefinition Width="1"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <Border Margin="10" Background="{DynamicResource HeroAmbientFill}" CornerRadius="16"/>
+                    <Grid Margin="22,20,22,18">
+                        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="222"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                        <Grid>
+                            <StackPanel><TextBlock Text="此刻的电脑" FontSize="20" FontWeight="SemiBold"/><TextBlock x:Name="HealthText" Text="正在建立系统基线" Foreground="{StaticResource Secondary}" FontSize="11" Margin="0,4,0,0"/></StackPanel>
+                            <Border HorizontalAlignment="Right" VerticalAlignment="Top" Background="{DynamicResource StatusChipFill}" CornerRadius="12" Padding="10,4"><TextBlock x:Name="HealthBadge" Text="CALM" Foreground="#B01E4C72" FontSize="9" FontWeight="SemiBold"/></Border>
+                        </Grid>
+                        <Grid x:Name="CpuRingHost" Grid.Row="1" Margin="0,10,0,0">
+                            <controls:LiquidGauge x:Name="CpuLiquidGauge"
+                                                  Width="174" Height="174"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  Shape="Orb"
+                                                  Foreground="{StaticResource Blue}"
+                                                  Background="#123C3C43"
+                                                  Maximum="100"
+                                                  ShowBubbles="False"
+                                                  AutomationProperties.Name="CPU 液态水位"/>
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock x:Name="CpuValue" Text="--" FontSize="45" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                                <TextBlock Text="CPU LOAD" Style="{StaticResource Eyebrow}" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                        <Grid Grid.Row="2" Margin="0,3,0,14">
+                            <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="1"/><ColumnDefinition/></Grid.ColumnDefinitions>
+                            <StackPanel><TextBlock Text="逻辑核心" Style="{StaticResource Eyebrow}"/><TextBlock x:Name="CoreValue" Text="--" FontSize="17" FontWeight="SemiBold" Margin="0,4,0,0"/></StackPanel>
+                            <Border Grid.Column="1" Background="{DynamicResource ContentLine}" Margin="0,1"/>
+                            <StackPanel Grid.Column="2" Margin="18,0,0,0"><TextBlock Text="运行时间" Style="{StaticResource Eyebrow}"/><TextBlock x:Name="UptimeValue" Text="--" FontSize="17" FontWeight="SemiBold" Margin="0,4,0,0"/></StackPanel>
+                        </Grid>
+                        <Grid Grid.Row="3">
+                            <Grid.RowDefinitions><RowDefinition Height="1"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                            <Border Background="{DynamicResource ContentLine}"/>
+                            <StackPanel Grid.Row="1" Margin="0,14,0,0">
+                                <TextBlock Text="设备" Style="{StaticResource Eyebrow}"/>
+                                <TextBlock x:Name="MachineNameText" Text="Windows PC" FontSize="14" FontWeight="SemiBold" Margin="0,5,0,2" TextTrimming="CharacterEllipsis"/>
+                                <TextBlock x:Name="OsText" Text="Windows" Foreground="{StaticResource Secondary}" FontSize="10" TextWrapping="Wrap"/>
+                                <Grid Margin="0,11,0,0"><TextBlock Text="传感器" Foreground="{StaticResource Secondary}" FontSize="11"/><TextBlock x:Name="SensorStateText" Text="自动检测" HorizontalAlignment="Right" FontSize="11" FontWeight="SemiBold"/></Grid>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </Grid>
+
+                <Border Grid.Column="1" Background="{DynamicResource ContentLine}"/>
+
+                <Grid Grid.Column="2">
+                    <Grid.RowDefinitions><RowDefinition Height="154"/><RowDefinition Height="1"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                    <UniformGrid Grid.Row="0" Columns="4">
+                        <Border Padding="18,16">
+                            <StackPanel><DockPanel><Ellipse Width="8" Height="8" Margin="3,0,0,0" Fill="{StaticResource Blue}"/><TextBlock x:Name="MemoryValue" Text="--%" HorizontalAlignment="Right" FontSize="23" FontWeight="SemiBold"/></DockPanel><TextBlock Text="内存" Style="{StaticResource Eyebrow}" Margin="0,9,0,6"/><controls:LiquidGauge x:Name="MemoryBar" Height="10" Foreground="{StaticResource Blue}" Background="#143C3C43" Maximum="100" ShowBubbles="False" AutomationProperties.Name="内存液态水位"/><TextBlock x:Name="MemoryDetail" Text="正在采样" Foreground="{StaticResource Secondary}" FontSize="10" Margin="0,6,0,0"/></StackPanel>
+                        </Border>
+                        <Border Padding="18,16" BorderBrush="{DynamicResource ContentLine}" BorderThickness="1,0,0,0">
+                            <StackPanel><DockPanel><Ellipse Width="8" Height="8" Margin="3,0,0,0" Fill="{StaticResource Mint}"/><TextBlock x:Name="DiskValue" Text="--%" HorizontalAlignment="Right" FontSize="23" FontWeight="SemiBold"/></DockPanel><TextBlock Text="系统磁盘" Style="{StaticResource Eyebrow}" Margin="0,9,0,6"/><controls:LiquidGauge x:Name="DiskBar" Height="10" Foreground="{StaticResource Mint}" Background="#143C3C43" Maximum="100" ShowBubbles="False" AutomationProperties.Name="磁盘液态水位"/><TextBlock x:Name="DiskDetail" Text="正在采样" Foreground="{StaticResource Secondary}" FontSize="10" Margin="0,6,0,0"/></StackPanel>
+                        </Border>
+                        <Border Padding="18,16" BorderBrush="{DynamicResource ContentLine}" BorderThickness="1,0,0,0">
+                            <StackPanel><DockPanel><Ellipse Width="8" Height="8" Margin="3,0,0,0" Fill="{StaticResource Violet}"/><TextBlock x:Name="GpuValue" Text="--%" HorizontalAlignment="Right" FontSize="23" FontWeight="SemiBold"/></DockPanel><TextBlock Text="图形处理器" Style="{StaticResource Eyebrow}" Margin="0,9,0,6"/><controls:LiquidGauge x:Name="GpuBar" Height="10" Foreground="{StaticResource Violet}" Background="#143C3C43" Maximum="100" ShowBubbles="False" AutomationProperties.Name="GPU 液态水位"/><TextBlock x:Name="GpuDetail" Text="正在检测" Foreground="{StaticResource Secondary}" FontSize="10" Margin="0,6,0,0" TextTrimming="CharacterEllipsis"/></StackPanel>
+                        </Border>
+                        <Border Padding="18,16" BorderBrush="{DynamicResource ContentLine}" BorderThickness="1,0,0,0">
+                            <StackPanel><DockPanel><Ellipse Width="8" Height="8" Margin="3,0,0,0" Fill="{StaticResource Orange}"/><TextBlock x:Name="TemperatureValue" Text="--°" HorizontalAlignment="Right" FontSize="23" FontWeight="SemiBold"/></DockPanel><TextBlock Text="温度" Style="{StaticResource Eyebrow}" Margin="0,9,0,6"/><controls:LiquidGauge x:Name="TemperatureBar" Height="10" Foreground="{StaticResource Orange}" Background="#143C3C43" Maximum="100" ShowBubbles="False" AutomationProperties.Name="温度液态水位"/><TextBlock x:Name="TemperatureDetail" Text="硬件能力检测中" Foreground="{StaticResource Secondary}" FontSize="10" Margin="0,6,0,0" TextTrimming="CharacterEllipsis"/></StackPanel>
+                        </Border>
+                    </UniformGrid>
+
+                    <Border Grid.Row="1" Background="{DynamicResource ContentLine}"/>
+
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="1.45*"/><ColumnDefinition Width="1"/><ColumnDefinition Width="1*"/></Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0" Margin="20,18,20,16">
+                            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="39"/></Grid.RowDefinitions>
+                            <Grid>
+                                <StackPanel><TextBlock Text="生命体征" Style="{StaticResource SectionTitle}"/><TextBlock Text="最近 60 秒" Foreground="{StaticResource Secondary}" FontSize="10" Margin="0,3,0,0"/></StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top"><Ellipse Width="7" Height="7" Fill="{StaticResource Blue}" Margin="0,4,5,0"/><TextBlock Text="CPU" Foreground="{StaticResource Secondary}" FontSize="10"/><Ellipse Width="7" Height="7" Fill="{StaticResource Violet}" Margin="14,4,5,0"/><TextBlock Text="内存" Foreground="{StaticResource Secondary}" FontSize="10"/></StackPanel>
+                            </Grid>
+                            <Grid Grid.Row="1" Margin="0,17,0,11">
+                                <Grid Opacity="0.55"><Grid.RowDefinitions><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/></Grid.RowDefinitions><Border Grid.Row="0" BorderBrush="{DynamicResource ContentLine}" BorderThickness="0,0,0,1"/><Border Grid.Row="1" BorderBrush="{DynamicResource ContentLine}" BorderThickness="0,0,0,1"/><Border Grid.Row="2" BorderBrush="{DynamicResource ContentLine}" BorderThickness="0,0,0,1"/></Grid>
+                                <Canvas x:Name="ChartCanvas" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ClipToBounds="True"><Polyline x:Name="CpuLine" Stroke="{StaticResource Blue}" StrokeThickness="2.6" StrokeLineJoin="Round"/><Polyline x:Name="MemoryLine" Stroke="{StaticResource Violet}" StrokeThickness="2.2" Opacity="0.75" StrokeLineJoin="Round"/></Canvas>
+                            </Grid>
+                            <Grid Grid.Row="2">
+                                <Grid.RowDefinitions><RowDefinition Height="1"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                                <Border Background="{DynamicResource ContentLine}"/>
+                                <Grid Grid.Row="1" Margin="0,9,0,0"><StackPanel Orientation="Horizontal"><TextBlock Text="网络" Foreground="{StaticResource Secondary}" FontSize="10" Margin="0,0,8,0"/><TextBlock x:Name="NetworkValue" Text="0 KB/s" FontSize="11" FontWeight="SemiBold"/></StackPanel><TextBlock x:Name="NetworkDetail" Text="↓ 0  ↑ 0" HorizontalAlignment="Right" Foreground="{StaticResource Secondary}" FontSize="10"/></Grid>
+                            </Grid>
+                        </Grid>
+
+                        <Border Grid.Column="1" Background="{DynamicResource ContentLine}"/>
+
+                        <Grid Grid.Column="2" Margin="17,18,17,14">
+                            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                            <Grid Margin="2,0,2,9"><StackPanel><TextBlock Text="活动进程" Style="{StaticResource SectionTitle}"/><TextBlock Text="按当前 CPU 活动排序" Foreground="{StaticResource Secondary}" FontSize="10" Margin="0,3,0,0"/></StackPanel><TextBlock x:Name="ProcessCountText" Text="--" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource Secondary}" FontSize="10"/></Grid>
+                            <ListView x:Name="ProcessList" Grid.Row="1" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource ProcessItem}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions><ColumnDefinition Width="32"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="43"/></Grid.ColumnDefinitions>
+                                            <Border Width="27" Height="27" CornerRadius="8" Background="{Binding AccentBrush}"><TextBlock Text="{Binding Initial}" Foreground="#EFFFFFFF" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
+                                            <StackPanel Grid.Column="1" Margin="8,0,5,0" VerticalAlignment="Center"><TextBlock Text="{Binding Name}" FontSize="11" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/><TextBlock Text="{Binding MemoryText}" Foreground="{StaticResource Secondary}" FontSize="9"/></StackPanel>
+                                            <TextBlock Grid.Column="2" Text="{Binding CpuText}" Foreground="{StaticResource Blue}" FontSize="10" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,7,0"/>
+                                            <Button Grid.Column="3" Content="结束" Style="{StaticResource EndProcessButton}" Tag="{Binding ProcessId}" IsEnabled="{Binding CanEnd}" Click="EndProcess_Click"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="2" Margin="21,0,21,5">
+            <TextBlock x:Name="FooterText" Text="iOS 27 功能玻璃层 · 清晰内容面 · 无常驻动画" Foreground="{StaticResource Tertiary}" FontSize="10" VerticalAlignment="Center"/>
+            <TextBlock x:Name="ClockText" HorizontalAlignment="Right" Foreground="{StaticResource Tertiary}" FontSize="10" VerticalAlignment="Center"/>
+        </Grid>
+
+        <Grid x:Name="GlassSettingsLayer" Grid.RowSpan="3" Panel.ZIndex="200" Background="#02000000" Visibility="Collapsed" MouseLeftButtonDown="GlassSettingsLayer_MouseLeftButtonDown">
+            <Border x:Name="GlassSettingsPanel" Width="340" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,58,148,0" Padding="19,17,19,18" CornerRadius="22" Background="{DynamicResource SettingsGlassFill}" BorderBrush="{DynamicResource FunctionalGlassEdge}" BorderThickness="1" AutomationProperties.Name="光学设置面板">
+                <Grid>
+                    <Border Background="{DynamicResource FunctionalSheen}" CornerRadius="21" Opacity="0.58" Margin="-18,-16,-18,-17" IsHitTestVisible="False"/>
+                    <StackPanel>
+                        <Grid>
+                            <StackPanel><TextBlock Text="光学材质" FontSize="17" FontWeight="SemiBold"/><TextBlock Text="iOS 27 分层：玻璃只漂浮在功能控件上" Foreground="{StaticResource Secondary}" FontSize="10" Margin="0,3,0,0"/></StackPanel>
+                            <Button Content="恢复默认" HorizontalAlignment="Right" VerticalAlignment="Top" Height="27" Padding="10,0" Style="{StaticResource GlassButton}" FontSize="10" Click="ResetGlassSettings_Click"/>
+                        </Grid>
+                        <Border Height="1" Background="#203C3C43" Margin="0,15,0,14"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="42"/></Grid.ColumnDefinitions>
+                            <StackPanel><TextBlock Text="外壳透光度" FontWeight="SemiBold" FontSize="12"/><TextBlock Text="内容区保持稳定可读，不跟随变透明" Foreground="{StaticResource Secondary}" FontSize="9" Margin="0,3,0,0"/></StackPanel>
+                            <TextBlock x:Name="GlassTransparencyValue" Grid.Column="1" Text="32%" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource Secondary}" FontSize="11"/>
+                        </Grid>
+                        <Slider x:Name="GlassTransparencySlider" Minimum="10" Maximum="75" Value="32" SmallChange="1" LargeChange="5" TickFrequency="1" Style="{StaticResource GlassSlider}" Margin="-3,8,-3,0" ToolTip="调整窗口外壳、工具栏和 OSD 的透光量" AutomationProperties.Name="玻璃透明度" ValueChanged="GlassSetting_ValueChanged"/>
+
+                        <Grid Margin="0,15,0,0">
+                            <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="42"/></Grid.ColumnDefinitions>
+                            <StackPanel><TextBlock Text="边缘光学" FontWeight="SemiBold" FontSize="12"/><TextBlock x:Name="RefractionStatusText" Text="内侧高光、轻微色散与边缘厚度" Foreground="{StaticResource Secondary}" FontSize="9" Margin="0,3,0,0"/></StackPanel>
+                            <TextBlock x:Name="GlassRefractionValue" Grid.Column="1" Text="58%" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource Secondary}" FontSize="11"/>
+                        </Grid>
+                        <Slider x:Name="GlassRefractionSlider" Minimum="0" Maximum="100" Value="58" SmallChange="1" LargeChange="5" TickFrequency="1" Style="{StaticResource GlassSlider}" Margin="-3,8,-3,0" ToolTip="调整安全的内侧高光、轻微色散和边缘厚度；不会重采样背景或产生黑边" AutomationProperties.Name="边缘光学强度" ValueChanged="GlassSetting_ValueChanged"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
