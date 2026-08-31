@@ -2,6 +2,18 @@
 
 Pulse 是一款面向 Windows 10/11 的轻量系统状态面板。视觉层级按 2026 年 iOS 27 官方 UI Kit 重新校准：透明玻璃只作为漂浮的功能层，监控内容留在稳定、清晰的一体化阅读面上，不再把“白色磨砂卡片”误当成 Liquid Glass。
 
+## 界面预览
+
+### 完整监控面板
+
+![Pulse 完整监控面板](src/docs/pulse-main.png)
+
+### 迷你液态数字 OSD
+
+最小化后会自动切换为置顶、可拖动且不抢焦点的紧凑 OSD。
+
+![Pulse 迷你液态数字 OSD](src/docs/pulse-mini-osd.png)
+
 ## 功能
 
 - CPU、GPU、内存、系统磁盘、网络和 ACPI 温度监控
