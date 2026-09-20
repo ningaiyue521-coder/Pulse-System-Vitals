@@ -1,78 +1,78 @@
 # Pulse
 
-Pulse 是一款面向 Windows 10/11 的轻量系统状态面板。视觉层级按 2026 年 iOS 27 官方 UI Kit 重新校准：透明玻璃只作为漂浮的功能层，监控内容留在稳定、清晰的一体化阅读面上，不再把“白色磨砂卡片”误当成 Liquid Glass。
+Pulse is a lightweight system monitoring panel for Windows 10/11. Its visual hierarchy follows the 2026 iOS 27 UI Kit: transparent glass is used for floating controls, while monitoring data remains on a stable, readable surface.
 
-## 界面预览
+## Preview
 
-### 完整监控面板
+### Full monitoring panel
 
-![Pulse 完整监控面板](src/docs/pulse-main.png)
+![Pulse full monitoring panel](src/docs/pulse-main.png)
 
-### 迷你液态数字 OSD
+### Compact liquid-digit OSD
 
-最小化后会自动切换为置顶、可拖动且不抢焦点的紧凑 OSD。
+Minimizing the main window switches to a compact, draggable, always-on-top on-screen display (OSD) that does not steal focus.
 
-![Pulse 迷你液态数字 OSD](src/docs/pulse-mini-osd.png)
+![Pulse compact liquid-digit OSD](src/docs/pulse-mini-osd.png)
 
-## 功能
+## Features
 
-- CPU、GPU、内存、系统磁盘、网络和 ACPI 温度监控
-- CPU 使用无气泡的液态圆形镜片，内存、磁盘、GPU 与温度使用带细液面焦散的轻量胶囊表示当前占用
-- 最近 60 秒 CPU / 内存趋势图
-- 原生活动进程榜，以及带二次确认和系统进程保护的“结束进程”操作
-- 最小化后自动切换为置顶的 CPU / GPU / 内存 / 温度玻璃 OSD
-- OSD 采用暗色高透的单体悬浮功能岛与四组液态数字；水位直接填充在百分比字形内部，不再额外堆放圆球或仪表外框
-- 顶部“光学材质”面板提供玻璃透明度和边缘光学滑条，并自动保存设置
-- 与整体视觉语言配套、间距独立的最小化、最大化和关闭按钮
+- CPU, GPU, memory, system disk, network, and ACPI temperature monitoring
+- A liquid-style circular CPU gauge and lightweight capsule gauges for memory, disk, GPU, and temperature, with subtle caustic highlights along the liquid surface
+- CPU and memory trend charts covering the last 60 seconds
+- A native process activity list, with confirmation and system-process protection for ending a process
+- An always-on-top CPU, GPU, memory, and temperature OSD when the main window is minimized
+- A compact dark-glass OSD with four liquid-filled numeric readouts; the fill level appears inside the digits
+- An Optical Material panel with automatically saved glass transparency and edge optics settings
+- Separately spaced minimize, maximize, and close controls that match the interface
 
-## 玻璃结构
+## Glass rendering
 
-- 窗体底层使用原生 DWM Clear Blur Behind，让后方窗口真实透色，不截取桌面
-- 边缘光学不再重采样背景像素；滑条只增强明亮内缘、轻微蓝紫色散、镜面高光和边缘厚度，拉满也不会生成暗边或黑边
-- 指针高光、内缘色散和镜面高光共用同一个光源位置；只在边缘光学启用且指针产生明显位移时以 66 ms 合并更新，不运行常驻动画
-- “玻璃透明度”只改变外壳、控制组与 OSD 的透光感，不会让文字、图表、进程和按钮一起消失
-- 复杂桌面背景下，光学设置浮层会保持更高对比度，保证滑条和数值可读
+- The window uses native DWM Clear Blur Behind so the colors of windows behind it remain visible, without taking desktop screenshots.
+- Edge optics add a bright inner rim, subtle blue-violet dispersion, specular highlights, and edge thickness. They do not resample background pixels or produce dark borders at the highest setting.
+- Pointer highlights, inner-edge dispersion, and specular highlights share one light-source position. Updates are coalesced at 66 ms intervals only when edge optics are enabled and the pointer has moved enough; there is no continuous animation loop.
+- Glass transparency affects the shell, control groups, and OSD while keeping text, charts, processes, and buttons readable.
+- The optical settings overlay maintains higher contrast against complex desktop backgrounds so its sliders and values remain legible.
 
-## 性能设计
+## Performance
 
-- 核心指标每 2 秒在后台采样，UI 线程只接收整理好的快照
-- 主界面液态仪表由持久化矢量层组成；OSD 液态数字只在采样变化时重画字形内部的一小块液面，没有波浪计时器或常驻动画
-- 主界面与迷你 OSD 的数字每 2 秒更新，液位最多每 4 秒合并更新一次，指标跳变达到 6% 会立即跟上
-- 常用液体渐变、高光与轮廓画刷会冻结并复用，主界面和 OSD 不会为每帧重复生成材质
-- GPU 使用单个原生 PDH 通配查询读取所有引擎，而不是逐实例创建性能计数器
-- 进程榜使用 `NtQuerySystemInformation` 一次取得原生快照：启动时立即显示，之后每 30 秒刷新
-- 结束进程或从 OSD 返回主界面后会按需立即刷新进程榜
-- 进入迷你 OSD 后停止磁盘、网络和进程榜采样，只保留四项必要指标
-- 透明扩散由桌面合成器处理，光学内缘使用冻结的轻量矢量画刷；应用本身不运行桌面截图循环或持续刷新的 WPF 模糊着色器
+- Core metrics are sampled in the background every 2 seconds. The UI thread receives prepared snapshots.
+- Main-window liquid gauges use persistent vector layers. OSD liquid digits redraw only the small filled area inside each glyph when samples change; they use no wave timer or continuous animation.
+- Numeric readouts update every 2 seconds. Liquid-level changes are coalesced to at most one update every 4 seconds, with immediate updates for changes of 6% or more.
+- Frequently used gradients, highlights, and outline brushes are frozen and reused instead of being recreated every frame.
+- GPU usage is collected through one native PDH wildcard query across all engines, rather than a separate performance counter for each instance.
+- The process list uses `NtQuerySystemInformation` to obtain one native snapshot. It appears immediately at startup and refreshes every 30 seconds.
+- Ending a process or returning from the OSD triggers an immediate process-list refresh when needed.
+- Mini OSD mode stops disk, network, and process-list sampling and keeps only its four required metrics.
+- The desktop compositor handles transparency, while lightweight frozen vector brushes provide edge optics. The application does not run a desktop screenshot loop or continuously update a WPF blur shader.
 
-## 使用
+## Usage
 
-直接双击 `Pulse.exe`，或双击 `启动 Pulse.bat`。
+Double-click `Pulse.exe`, or use the launcher `启动 Pulse.bat` (Launch Pulse).
 
-- 点击右上角最小化按钮会进入迷你 OSD，而不是普通任务栏最小化
-- 拖动 OSD 可调整位置；点击胶囊末端的展开符号，或双击 OSD 空白处返回完整面板
-- 百分比的字内液位与显示数值一致；温度液位按 `30–100°C` 映射，达到 75°C 转暖橙、88°C 转红，传感器不可用时液位归零
-- 点击顶部暂停按钮旁的光学图标，可调整“玻璃透明度”和“边缘光学”；`0` 仅保留用于识别玻璃边界的基础亮缘，`100` 为最明显但仍无黑边的内缘效果
-- “结束”按钮不会用于 Pulse 自身和系统核心进程；结束其他受保护进程时，Windows 仍可能拒绝权限
-- 部分主板不会通过标准 Windows 接口公开温度，此时温度显示为 `--°`，其他指标不受影响
+- The minimize button switches to the mini OSD instead of minimizing to the taskbar.
+- Drag the OSD to reposition it. Click the expand control at the end of the capsule, or double-click an empty area, to return to the full panel.
+- Percentage fill levels match the displayed values. Temperature fill maps to `30–100°C`, turns warm orange at 75°C, and turns red at 88°C. The fill resets to zero when the sensor is unavailable.
+- Click the optics icon next to the pause button to adjust Glass Transparency and Edge Optics. At `0`, the edge setting keeps a basic bright outline; at `100`, it applies the strongest inner-edge effect without a black border.
+- The End Process control is disabled for Pulse itself and core system processes. Windows may also deny access to other protected processes.
+- Some motherboards do not expose temperature through standard Windows interfaces. In that case the temperature reads `--°`, while other metrics continue to work.
 
-## 目录
+## Files
 
-- `Pulse.exe`：Windows x64 单文件、自包含发行版
-- `Pulse.settings.json`：调整光学设置后自动生成；更新程序时不会覆盖
-- `Pulse.crash.log`：仅在出现未处理异常时生成
-- `启动 Pulse.bat`：快捷启动脚本
-- `src`：可继续开发的完整源码
-- `.build/dotnet-sdk`：本项目使用的本地 .NET SDK
+- `Pulse.exe`: self-contained, single-file Windows x64 release
+- `Pulse.settings.json`: generated after optical settings are changed; preserved when updating the application
+- `Pulse.crash.log`: generated only after an unhandled exception
+- `启动 Pulse.bat`: shortcut launcher
+- `src`: complete source code for further development
+- `.build/dotnet-sdk`: the local .NET SDK used by the project
 
-项目所需文件均放在 `D:\温度显示` 内，不依赖桌面上的临时源码或构建目录。
+Keep the project files together in the repository directory. The project does not depend on temporary source or build folders on the desktop.
 
-## 构建
+## Build
 
-在 `D:\温度显示` 下执行：
+From the repository root, using the local SDK at `.build/dotnet-sdk`:
 
 ```powershell
 & '.\.build\dotnet-sdk\dotnet.exe' publish '.\src\DemoApp.csproj' -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
 ```
 
-第三方来源与许可见 `THIRD-PARTY-NOTICES.md`。
+See `THIRD-PARTY-NOTICES.md` for third-party sources and licensing information.
