@@ -47,7 +47,7 @@ Minimizing the main window switches to a compact, draggable, always-on-top on-sc
 
 ## Usage
 
-Double-click `Pulse.exe`, or use the launcher `启动 Pulse.bat` (Launch Pulse).
+Double-click `Pulse.exe`, or run the [batch launcher](%E5%90%AF%E5%8A%A8%20Pulse.bat).
 
 - The minimize button switches to the mini OSD instead of minimizing to the taskbar.
 - Drag the OSD to reposition it. Click the expand control at the end of the capsule, or double-click an empty area, to return to the full panel.
@@ -61,7 +61,7 @@ Double-click `Pulse.exe`, or use the launcher `启动 Pulse.bat` (Launch Pulse).
 - `Pulse.exe`: self-contained, single-file Windows x64 release
 - `Pulse.settings.json`: generated after optical settings are changed; preserved when updating the application
 - `Pulse.crash.log`: generated only after an unhandled exception
-- `启动 Pulse.bat`: shortcut launcher
+- [Batch launcher](%E5%90%AF%E5%8A%A8%20Pulse.bat): a shortcut for starting Pulse
 - `src`: complete source code for further development
 - `.build/dotnet-sdk`: the local .NET SDK used by the project
 
